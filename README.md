@@ -1,5 +1,6 @@
-# MLSP-genre
-Song Genre Classification
+# Song Genre Classification 
+for JHU EP Machine Learning for Signal Processing
+by: Andrew Nguyen, Cameron Greene, Irene O'Hara, Jack Mccarty
 
 ## Git refresher
 git clone git@github.com:nguyea4/learngit.git
