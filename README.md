@@ -2,7 +2,7 @@
 for JHU EP Machine Learning for Signal Processing
 by: Andrew Nguyen, Cameron Greene, Irene O'Hara, Jack Mccarty
 ## How to get this Repo
-`git clone git@github.com:nguyea4/MLSP-genre.git
+`git clone git@github.com:nguyea4/MLSP-genre.git`
 
 
 ## Git refresher
