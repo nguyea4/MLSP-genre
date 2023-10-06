@@ -3,7 +3,7 @@ for JHU EP Machine Learning for Signal Processing
 by: Andrew Nguyen, Cameron Greene, Irene O'Hara, Jack Mccarty
 
 ## Git refresher
-git clone git@github.com:nguyea4/learngit.git
+`git clone git@github.com:nguyea4/learngit.git`
 Things I use alot:  
 1. **`git status`**
 2. **`git branch --all`**
