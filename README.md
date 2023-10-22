@@ -1,6 +1,7 @@
 # Song Genre Classification 
 for JHU EP Machine Learning for Signal Processing
 by: Andrew Nguyen, Cameron Greene, Irene O'Hara, Jack Mccarty
+We are utilizing MATLAB
 ## How to get this Repo
 `git clone git@github.com:nguyea4/MLSP-genre.git`
 ## Using Virtual environment (if we use python)
