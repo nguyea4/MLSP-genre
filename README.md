@@ -3,7 +3,7 @@ for JHU EP Machine Learning for Signal Processing
 by: Andrew Nguyen, Cameron Greene, Irene O'Hara, Jack Mccarty
 ## How to get this Repo
 `git clone git@github.com:nguyea4/MLSP-genre.git`
-## Using Virtual environment
+## Using Virtual environment (if we use python)
 So we all have same packages
 Following [this](https://realpython.com/python-virtual-environments-a-primer/) link. 
 To Create it
