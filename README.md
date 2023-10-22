@@ -4,6 +4,8 @@ by: Andrew Nguyen, Cameron Greene, Irene O'Hara, Jack Mccarty
 We are utilizing MATLAB
 ## How to get this Repo
 `git clone git@github.com:nguyea4/MLSP-genre.git`
+## Running stuff
+Be in the 'MLSP-genre' directory
 ## Using Virtual environment (if we use python)
 So we all have same packages
 Following [this](https://realpython.com/python-virtual-environments-a-primer/) link. 
