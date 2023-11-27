@@ -25,3 +25,15 @@ Things I use alot:
 5. **`git add whatevername.py`**
 6. **`git commit -m "Title" -m "Description .........."`**
 7. **`git push`**
+
+## Description of Files
+bayes_classifier.m
+comp_guass_dens_val.m
+compute_error.m
+divergence.m
+euclidean_classifier.m
+feature30sec.mat
+k_nn_classifier.m
+mccarty_classification.m
+readAllSongs.m
+readfiles.m
