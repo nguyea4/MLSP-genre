@@ -47,3 +47,4 @@ center = round(n/2);
 audioMatrix1 = cell2mat(audioDataCellArray(1:center)); % Convert cell array to a matrix (each column represents a different song)
 audioMatrix2 = cell2mat(audioDataCellArray(center+1:n)); % Convert for rest of data(cell2mat out of memory problem)
 audioMatrix = [audioMatrix1, audioMatrix2];
+fs = 44100; % sampling frequency (Hz)
