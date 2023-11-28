@@ -1,6 +1,6 @@
 clear all
-
-baseFolderPath = '.\data\genres_original'; % Change to match your setup
+% baseFolderPath = 'D:\Johns Hopkins\Machine Learning for Signal Processing\Course Project\Data\genres_original'; %  Cameron's: Change to match your setup
+baseFolderPath = '.\data\genres_original'; % Andrew's: Change to match your setup
 subfolders = {'blues', 'classical', 'country', 'disco', 'hiphop', 'metal', 'pop', 'reggae', 'rock','jazz'};%
 
 audioDataCellArray = {}; % Initialize a cell array to store audio data
