@@ -27,13 +27,14 @@ Things I use alot:
 7. **`git push`**
 
 ## Description of Files
-bayes_classifier.m
-comp_guass_dens_val.m
-compute_error.m
-divergence.m
-euclidean_classifier.m
-feature30sec.mat
-k_nn_classifier.m
-mccarty_classification.m
-readAllSongs.m
-readfiles.m
+bayes_classifier.m</br>
+comp_guass_dens_val.m</br>
+compute_error.m</br>
+divergence.m</br>
+euclidean_classifier.m</br>
+feature30sec.mat</br>
+k_nn_classifier.m</br>
+mccarty_classification.m</br>
+readAllSongs.m: Stores all the '.wav' data file into audioDataMatrix</br>
+readfiles.m</br>
+spectral_feature_assessment.m: Explore separability of different spectrogram-based features. Including spectrogram hyperparameters, mean and variance of each frequency, PCA of PSD, NMF of PSD  </br>
