@@ -1,68 +1,54 @@
-clear all
+clear all;
 
 readAllSongs29Seconds;
 
-data_matrix=audioMatrix;
+% Parameters for the spectrogram computation
+windowSize = 2^12;  % Updated window size for each segment
+overlap = windowSize/2;     % Overlap between consecutive segments
 
-% Set parameters
-numGenres = 10; % Assuming you have 10 genres
-numColumnsPerGenre = 100; % Assuming 100 columns per genre
-numTrainingColumns = 10; % Use the first 10 columns for training
-rank = 90; % Adjust the rank as needed
+numSongs = size(audioMatrix, 2);
+audioSpectrumMatrix = zeros(windowSize/2 + 1, numSongs, 'double');  % Assuming single precision for efficiency
 
-% Initialize variables to store basis vectors and coefficients
-W = zeros(size(data_matrix, 1), numGenres * rank);
-H = zeros(numGenres * rank, size(data_matrix, 2));
-
-% Perform NMF for each genre
-for i = 1:numGenres
-    startCol = (i - 1) * numColumnsPerGenre + 1;
-    endCol = startCol + numColumnsPerGenre - 1;
-
-    % Extract data for the current genre
-    genreData = data_matrix(:, startCol:endCol);
-
-    % Perform NMF using nnmf function
-    [W_temp, H_temp] = nnmf(genreData, rank);
-
-    % Assign the results to the appropriate sections
-    W(:, (i - 1) * rank + 1:i * rank) = W_temp;
-    H((i - 1) * rank + 1:i * rank, startCol:endCol) = H_temp;
+% Compute the spectrogram for each column in audioMatrix
+for i = 1:numSongs
+    [S, F, T] = spectrogram(audioMatrix(:, i), hamming(windowSize), overlap, windowSize, 'yaxis');
+    audioSpectrumMatrix(:, i) = mean(abs(S), 2);  % Using mean of magnitude for simplicity
 end
 
-% Assuming you have numTrainingColumns observations for each genre
-numObservations = numGenres * numTrainingColumns;
+columnStride = 100; % Select every other 50 columns
 
-% Prepare Training Data
-trainingData = zeros(numObservations, size(W, 2));
-trainingLabels = repelem(1:numGenres, numTrainingColumns);
+% Calculate the number of blocks
+numBlocks = floor(size(audioSpectrumMatrix, 2) / columnStride);
 
-for i = 1:numGenres
-    startRow = (i - 1) * numTrainingColumns + 1;
-    endRow = startRow + numTrainingColumns - 1;
+% Preallocate the trainingData matrix
+trainingData = zeros(size(audioSpectrumMatrix, 1), numBlocks * 50, 'single');
 
-    trainingData(startRow:endRow, :) = W(startRow:endRow, :);
+% Extract every other 50 columns
+for i = 1:numBlocks
+    startCol = (i - 1) * columnStride + 1;
+    endCol = startCol + 49;
+    trainingData(:, (i - 1) * 50 + 1 : i * 50) = audioSpectrumMatrix(:, startCol : endCol);
 end
 
-% Train Bayesian Classifier
-classifier = fitcnb(trainingData, trainingLabels);
-
-% Extract features for test data using NMF
-testData = zeros(size(data_matrix, 1), numGenres * (numColumnsPerGenre - numTrainingColumns));
-
-for i = 1:numGenres
-    startCol = (i - 1) * numColumnsPerGenre + numTrainingColumns + 1;
-    endCol = startCol + (numColumnsPerGenre - numTrainingColumns) - 1;
-
-    testData(:, (i - 1) * (numColumnsPerGenre - numTrainingColumns) + 1:i * (numColumnsPerGenre - numTrainingColumns)) = data_matrix(:, startCol:endCol);
+% Set opposite 50 columns as test data
+for i = 1:numBlocks
+    startCol = (i - 1) * columnStride + 1+50;
+    endCol = startCol + 49;
+    testData(:, (i - 1) * 50 + 1 : i * 50) = audioSpectrumMatrix(:, startCol : endCol);
 end
 
-% Prepare Labels for Test Data
-testLabels = repelem(1:numGenres, (numColumnsPerGenre - numTrainingColumns));
+trainLabels=reshape(repmat(1:10, 50, 1), 1, []);
 
-% Classify test data using the trained Bayesian classifier
-predictedLabels = predict(classifier, nnmf(testData, rank)');
+% SVM
+t = templateSVM('BoxConstraint', 1,'KernelFunction','linear');
+Mdl = fitcecoc(trainingData',trainLabels,'Learners', t);
+predictedLabelsSVM = predict(Mdl, testData');
+countSVM = 0;
+for i=1:length(predictedLabelsSVM)
+    if predictedLabelsSVM(i) == trainLabels(i)
+        countSVM = countSVM + 1 ;
+    end
+end
+accuracySVM = countSVM/length(predictedLabelsSVM);
 
-% Display the predicted labels
-disp("Predicted Labels for Test Data:");
-disp(predictedLabels);
+
