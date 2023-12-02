@@ -3,7 +3,7 @@ clear all;
 readAllSongs29Seconds;
 
 % Parameters for the spectrogram computation
-windowSize = 2^12;  % Updated window size for each segment
+windowSize = 2^6;  % Updated window size for each segment
 overlap = windowSize/2;     % Overlap between consecutive segments
 
 numSongs = size(audioMatrix, 2);
@@ -37,18 +37,21 @@ for i = 1:numBlocks
     testData(:, (i - 1) * 50 + 1 : i * 50) = audioSpectrumMatrix(:, startCol : endCol);
 end
 
-trainLabels=reshape(repmat(1:10, 50, 1), 1, []);
+trainLabels = reshape(repmat(1:10, 50, 1), 1, []);
+
+% Perform PCA on training data
+numPCAComponents = 100;  % Adjust as needed
+coeff = pca(trainingData');
+trainingDataPCA = trainingData' * coeff(:, 1:numPCAComponents);
+
+% Perform PCA on test data
+testDataPCA = testData' * coeff(:, 1:numPCAComponents);
 
 % SVM
-t = templateSVM('BoxConstraint', 1,'KernelFunction','linear');
-Mdl = fitcecoc(trainingData',trainLabels,'Learners', t);
+t = templateSVM('BoxConstraint', 1, 'KernelFunction', 'linear');
+Mdl = fitcecoc(trainingData', trainLabels, 'Learners', t);
 predictedLabelsSVM = predict(Mdl, testData');
-countSVM = 0;
-for i=1:length(predictedLabelsSVM)
-    if predictedLabelsSVM(i) == trainLabels(i)
-        countSVM = countSVM + 1 ;
-    end
-end
-accuracySVM = countSVM/length(predictedLabelsSVM);
+countSVM = sum(predictedLabelsSVM == trainLabels);
+accuracySVM = countSVM / length(predictedLabelsSVM);
 
 
