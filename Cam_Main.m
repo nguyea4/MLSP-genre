@@ -39,13 +39,6 @@ end
 
 trainLabels = reshape(repmat(1:10, 50, 1), 1, []);
 
-% Perform PCA on training data
-numPCAComponents = 100;  % Adjust as needed
-coeff = pca(trainingData');
-trainingDataPCA = trainingData' * coeff(:, 1:numPCAComponents);
-
-% Perform PCA on test data
-testDataPCA = testData' * coeff(:, 1:numPCAComponents);
 
 % SVM
 t = templateSVM('BoxConstraint', 1, 'KernelFunction', 'linear');
