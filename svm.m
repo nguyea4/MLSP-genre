@@ -243,12 +243,12 @@ classdef svm
                     classx(classx==classInstance(i))=svmValue;
                     classx(classx~=svmValue)=1;
                     classx(classx==svmValue)=0;
-                    model{i}=svmtrain(training,classx,varargin{:});
+                    model{i}=fitcsvm(training,classx,varargin{:});
                     fprintf('Multi Class SVM Model for Class Instance %d --->\n',classInstance(i))
                     disp(model{i})
                 end
             else
-                model=svmtrain(training,groupnames,varargin{:});
+                model=fitcsvm(training,groupnames,varargin{:});
                 fprintf('\nx Two class svm  Model--->\n')
                 disp(model)
             end
@@ -364,7 +364,7 @@ classdef svm
                             case 1 % plotflag ('SHOWPLOT')
                                 plotflag = opttf(pval,okargs{k});
                             case 2 % help the compiler find required function handles by including svmtrain
-                                svmtrain(eye(2),[1 0]);
+                                fitcsvm(eye(2),[1 0]);
                         end
                     end
                 end
