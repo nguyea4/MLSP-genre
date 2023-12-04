@@ -79,7 +79,7 @@ svmLabel(351:400,1) = 8;  %reggae
 svmLabel(401:450,1) = 9;  %rock
 svmLabel(451:500,1) = 10; %jazz
     
-svmModel = svm.train(TrainMatrix,svmLabel);
+
 %% Transform Raw data into spectrograms
 for i = 1:N
     win_size = 500;
@@ -91,9 +91,32 @@ for i = 1:N
     pow_vectors = [pow_vectors, reshape(pow_spec, [length(w)*length(t),1])]; % b bins x N songs, b = w*t
 end
 
+%Take half of spectrogram data for allowable computation
+TrainPowVectors = [];
+
+TrainPowVectors(:,1:50) = pow_vectors(:,1:50);       %first half of blues
+TrainPowVectors(:,51:100) = pow_vectors(:,101:150);  %first half of classical
+TrainPowVectors(:,101:150) = pow_vectors(:,201:250); %first half of country
+TrainPowVectors(:,151:200) = pow_vectors(:,301:350); %first half of disco
+TrainPowVectors(:,201:250) = pow_vectors(:,401:450); %first half of hiphop
+TrainPowVectors(:,251:300) = pow_vectors(:,501:550); %first half of metal
+TrainPowVectors(:,301:350) = pow_vectors(:,601:650); %first half of pop
+TrainPowVectors(:,351:400) = pow_vectors(:,701:750); %first half of reggae
+TrainPowVectors(:,401:450) = pow_vectors(:,801:850); %first half of rock
+TrainPowVectors(:,451:500) = pow_vectors(:,901:950); %first half of jazz
+
 %% Run spectrograms through PCA
+TrainPowVectors = TrainPowVectors';
+[V,U] = pca(TrainPowVectors);
+numComp = 55;
+
+recon = U(:,1:numComp)*V(:,1:numComp)';
+
+%reconstruct the signal
+
 
 
 %% Perform multiSVM on raw spec. vs. lower dimensionality spec. 
+svmModel = svm.train(recon',svmLabel);
 
 %% Assess separation performance 
