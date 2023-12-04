@@ -6,7 +6,7 @@ readAllSongs29Seconds;
 audioMatrix = rescale(audioMatrix, 0, 1);
 
 % Parameters for the spectrogram computation
-windowSize = 2^16;  % Updated window size for each segment
+windowSize = 2^19;  % Updated window size for each segment
 overlap = windowSize/2;     % Overlap between consecutive segments
 
 numSongs = size(audioMatrix, 2);
@@ -61,7 +61,7 @@ trainData = trainData(:, randperm(size(trainData, 2)));
 testData = testData(:, randperm(size(testData, 2)));
 
 % Perform PCA
-numComponents = 150;  % You can adjust the number of components as needed
+numComponents = 50;  % You can adjust the number of components as needed
 [coeff, score, ~, ~, explained] = pca(trainData');
 
 % Select the top 'numComponents' principal components
@@ -73,7 +73,7 @@ testDataPCA = testData' * selectedComponents;
 
 % SVM
 t = templateSVM('BoxConstraint', 1, 'KernelFunction', 'linear');
-Mdl = fitcecoc(trainDataPCA, trainLabels, 'Learners', t);
+Mdl = fitcecoc(trainDataPCA, trainLabels', 'Learners', t);
 predictedLabelsSVM = predict(Mdl, testDataPCA);
 
 % Calculate accuracy using testLabels
@@ -81,5 +81,3 @@ countSVM = sum(predictedLabelsSVM == testLabels);
 accuracySVM = countSVM / length(predictedLabelsSVM);
 
 disp(['SVM Accuracy with PCA: ', num2str(accuracySVM)]);
-
-
