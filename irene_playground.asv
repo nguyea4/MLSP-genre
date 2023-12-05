@@ -105,18 +105,38 @@ TrainPowVectors(:,351:400) = pow_vectors(:,701:750); %first half of reggae
 TrainPowVectors(:,401:450) = pow_vectors(:,801:850); %first half of rock
 TrainPowVectors(:,451:500) = pow_vectors(:,901:950); %first half of jazz
 
+%Take second half of spectrogram data to test model
+TestPowVectors = [];
+TestPowVectors(:,1:50) = pow_vectors(:,51:100);     %second half of blues
+TestPowVectors(:,51:100) = pow_vectors(:,151:200);  %second half of classical
+TestPowVectors(:,101:150) = pow_vectors(:,251:300); %second half of country
+TestPowVectors(:,151:200) = pow_vectors(:,351:400); %second half of disco
+TestPowVectors(:,201:250) = pow_vectors(:,451:500); %second half of hiphop
+TestPowVectors(:,251:300) = pow_vectors(:,551:600); %second half of metal
+TestPowVectors(:,301:350) = pow_vectors(:,651:700); %second half of pop
+TestPowVectors(:,351:400) = pow_vectors(:,751:800); %second half of reggae
+TestPowVectors(:,401:450) = pow_vectors(:,851:900); %second half of rock
+TestPowVectors(:,451:499) = pow_vectors(:,951:999); %second half of jazz
+
 %% Run spectrograms through PCA
+%training set
 TrainPowVectors = TrainPowVectors';
-[V,U] = pca(TrainPowVectors);
+[train_V,train_U] = pca(TrainPowVectors);
 numComp = 55;
+%reconstruct the signals/spectrograms
+Trainrecon = train_U(:,1:numComp)*train_V(:,1:numComp)';
 
-recon = U(:,1:numComp)*V(:,1:numComp)';
+%test set
+TestPowVectors = TestPowVectors';
+[test_V,test_U] = pca(TestPowVectors);
+TestRecon = test_U(:,1:numComp)*test_V(:,1:numComp)';
 
-%reconstruct the signal
 
 
-
-%% Perform multiSVM on raw spec. vs. lower dimensionality spec. 
-svmModel = svm.train(recon',svmLabel);
+%% Perform multiSVM on pow_spec post pca
+%train the model with the first half of data
+Model = svm.train(Trainrecon,svmLabel);
+%Test the model with the second half of data
+predict = svm.predict(Model,TestRecon);
 
 %% Assess separation performance 
